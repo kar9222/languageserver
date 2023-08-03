@@ -85,6 +85,7 @@ document_symbol_reply <- function(id, uri, workspace, document, capabilities) {
     result <- definition_symbols
 
     if (isTRUE(capabilities$hierarchicalDocumentSymbolSupport)) {
+        # See `get_document_sections
         sections <- get_document_symbols(
             document,
             xdoc = parse_data$xml_doc
@@ -93,7 +94,10 @@ document_symbol_reply <- function(id, uri, workspace, document, capabilities) {
             symbol_information(
                 name = section$name,
                 kind = switch(section$type,
-                    section = SymbolKind$String,
+                    # Change the symbol kind of section & subsection to unused symbol kind e.g. `SymbolKind$Event`
+                    section = SymbolKind$Event,
+                    subsection = SymbolKind$Event,  # TODO This was removed?
+
                     chunk = SymbolKind$Key,
                     SymbolKind$String
                 ),
